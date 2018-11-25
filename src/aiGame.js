@@ -1,12 +1,13 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from "react";
 
-import "./ai/qLerning";
+import MyAgent from "./ai/qLerning";
 
 class aiGame extends Component {
   render() {
     return (
       <div style={boardsContainer}>
-        
+
       </div>
     );
   }
