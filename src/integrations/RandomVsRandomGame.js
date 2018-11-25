@@ -7,37 +7,40 @@ import Chessboard from "chessboardjsx";
 class RandomVsRandom extends Component {
   static propTypes = { children: PropTypes.func };
 
-  state = { fen: ""};
+  state = { fen: "start" };
 
   componentDidMount() {
-      this.game = new Chess();
-      this.setState({ fen: this.game.fen() });
-      setTimeout(() => this.makeRandomMove(), 1);
-    }
+    this.game = new Chess();
+    setTimeout(() => this.playNextMove(), 2000);
+    this.setState({ fen: this.game.fen() });
+  }
 
-    componentWillUnmount() {
-      window.clearTimeout(this.timer());
-    }
+  componentWillUnmount() {
+    window.clearTimeout(this.timer());
+  }
 
-    timer = () => window.setTimeout(this.makeRandomMove, 1);
+  timer = () => window.setTimeout(this.playNextMove, 2000);
 
 
     makeMoveForColor(color){
 
     }
 
-    playNextMove(){
+    playNextMove = () => {
+      //console.log(this.game.fen())
       var playerAtTurn = this.turn(this.game.fen())
       var fenForColor = this.getFenForColor(this.state.fen, playerAtTurn)
+      //console.log(fenForColor)
       this.game.load(fenForColor)
 
-      //this.makeRandomMove()
-
+      this.makeRandomMove()
+      //this.setState({ fen: this.game.fen() });
+      //this.timer();
     }
 
     makeRandomMove = () => {
       let possibleMoves = this.game.moves();
-
+  
       // exit if the game is over
       if (
         this.game.game_over() === true ||
@@ -45,11 +48,12 @@ class RandomVsRandom extends Component {
         possibleMoves.length === 0
       )
         return;
-
+  
       let randomIndex = Math.floor(Math.random() * possibleMoves.length);
       this.game.move(possibleMoves[randomIndex]);
       this.setState({ fen: this.game.fen() });
-
+      
+      //this.playNextMove()
       this.timer();
     };
 
@@ -162,7 +166,7 @@ class RandomVsRandom extends Component {
 
   render() {
     const { fen } = this.state;
-        return this.props.children({ position: fen});
+    return this.props.children({ position: fen });
   }
 }
 
@@ -173,16 +177,28 @@ export default function RandomVsRandomGame() {
     <div>
       <RandomVsRandom>
         {({ position }) => (
-            <Chessboard
-              width={320}
-              id="random"
-              position={position}
-              transitionDuration={300}
-              boardStyle={{
-                borderRadius: "5px",
-                boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
-              }}              
-            />
+          <div>
+          <Chessboard
+            width={320}
+            id="random"
+            position={position}
+            transitionDuration={300}
+            boardStyle={{
+              borderRadius: "5px",
+              boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
+            }}
+          />
+          <Chessboard
+            width={320}
+            id="random"
+            position={position}
+            transitionDuration={300}
+            boardStyle={{
+              borderRadius: "5px",
+              boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
+            }}
+          />
+          </div>        
         )}
       </RandomVsRandom>
     </div>
