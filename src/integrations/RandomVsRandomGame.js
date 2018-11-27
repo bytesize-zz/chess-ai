@@ -174,10 +174,8 @@ class RandomVsRandom extends Component {
 /* eslint react/prop-types: 0 */
 export default function RandomVsRandomGame() {
   return (
-    <div>
       <RandomVsRandom>
         {({ position }) => (
-          <div>
           <Chessboard
             width={320}
             id="random"
@@ -185,22 +183,11 @@ export default function RandomVsRandomGame() {
             transitionDuration={300}
             boardStyle={{
               borderRadius: "5px",
-              boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
+              boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`,
             }}
-          />
-          <Chessboard
-            width={320}
-            id="random"
-            position={position}
-            transitionDuration={300}
-            boardStyle={{
-              borderRadius: "5px",
-              boxShadow: `0 5px 15px rgba(0, 0, 0, 0.5)`
-            }}
-          />
-          </div>        
+          />      
         )}
       </RandomVsRandom>
-    </div>
+           
   );
 }

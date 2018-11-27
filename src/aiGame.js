@@ -1,19 +1,19 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from "react";
 
-import MyAgent from "./ai/qLerning";
+import MyAgentGame from "./ai/qLerning";
 
-class aiGame extends Component {
+class AIGame extends Component {
   render() {
     return (
       <div style={boardsContainer}>
-
+      <MyAgentGame />
       </div>
     );
   }
 }
 
-export default aiGame;
+export default AIGame;
 
 const boardsContainer = {
   display: "flex",
