@@ -1,3 +1,11 @@
+My attempt to write a chess-ai. As input i used:
+
+The chessboard UI: https://github.com/willb335/chessboardjsx
+a chess library: https://github.com/jhlywa/chess.js
+
+
+----------------------------------------------------------------------------------------------------
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
