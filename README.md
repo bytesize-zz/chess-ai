@@ -1,6 +1,6 @@
 My attempt to write a chess-ai. As input i used:
 
-The chessboard UI: https://github.com/willb335/chessboardjsx
+The chessboard UI: https://github.com/willb335/chessboardjsx <br>
 a chess library: https://github.com/jhlywa/chess.js
 
 
