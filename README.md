@@ -1,4 +1,6 @@
-My attempt to write a chess-ai. As input i used:
+Learning Project<br>
+My attempt to write a chess-ai with the help of reinforcement learning and deep neural networks.<br>
+As input i used:
 
 The chessboard UI: https://github.com/willb335/chessboardjsx <br>
 a chess library: https://github.com/jhlywa/chess.js
