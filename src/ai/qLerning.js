@@ -25,30 +25,32 @@ class MyAgent extends Component{
         let FIELDS = 64; //all fields of the board
         let PIECES = 6; // pawn	knight	bishop	rook	queen king
         let COLOR = 2; // black and white
-
-        this.model = tf.sequential();
-        this.model.add(tf.layers.conv2d({inputShape: [64, 6, 2],dataFormat: "channelsLast" , kernelSize: 5, filters: 8, strides: 1, activation: 'relu', kernelInitializer: 'VarianceScaling'}))
+        
+        //this.model = tf.sequential();
+        //this.model.add(tf.layers.conv2d({inputShape: [64, 6, 2], kernelSize: 5, filters: 8, strides: 1, activation: 'relu'}))
         //this.model.add(tf.layers.conv2d(64, (3, 3)/*, input_shape=(FIELDS, PIECES, COLOR), data_format="channels_last"*/))
         //this.model.add(tf.layers.Activation('relu'))
-        this.model.add(tf.layers.conv2d({kernelSize: 5, filters: 16, strides: 1, activation: 'relu', kernelInitializer: 'VarianceScaling'}))
+        //this.model.add(tf.layers.maxPooling2d({poolSize:[2, 2], strides: [2, 2]}))
+        //this.model.add(tf.layers.conv2d({kernelSize: 5, filters: 16, strides: 1, activation: 'relu'}))
         //this.model.add(tf.layers.conv2d(64, (3, 3)))
         //this.model.add(tf.layers.Activation('relu'))
-        this.model.add(tf.layers.maxPooling2d({poolSize:[4,4]}))
-        this.model.add(tf.layers.conv2d(64, (3, 3)))
-        this.model.add(tf.layers.Activation('relu'))
-        this.model.add(tf.layers.conv2d(64, (3, 3)))
-        this.model.add(tf.layers.Activation('relu'))
-        this.model.add(tf.layers.maxPooling2d({poolSize:[4,4]}))
-        this.model.add(tf.layers.flatten())
-        this.model.add(tf.layers.Dropout(0.5))
-        this.model.add(tf.layers.dense(400))
-        this.model.add(tf.layers.Activation('relu'))
-        this.model.add(tf.layers.Dropout(0.5))
-        this.model.add(tf.layers.dense({units: 2, kernelInitializer: 'VarianceScaling', activation: 'softmax'})); // units: answer, the move we should do ?
+        //this.model.add(tf.layers.conv2d(64, (3, 3)))
+        //this.model.add(tf.layers.Activation('relu'))
+        //this.model.add(tf.layers.conv2d(64, (3, 3)))
+        //this.model.add(tf.layers.Activation('relu'))
+
+        //this.model.add(tf.layers.flatten())
+        //this.model.add(tf.layers.Dropout(0.5))
+        //this.model.add(tf.layers.dense(400))
+        //this.model.add(tf.layers.Activation('relu'))
+        //this.model.add(tf.layers.Dropout(0.5))
+        //this.model.add(tf.layers.dense({units: 1, kernelInitializer: 'VarianceScaling', activation: 'softmax'})); // units: answer, the move we should do ?
         //this.model.add(tf.layers.dense(1))
         //this.model.add(tf.layers.Activation('softmax'))
         //this.model.compile(loss='categorical_crossentropy', optimizer='adamax', metrics=['accuracy'])
-        this.model.compile({optimizer: optimizer, loss: 'categoricalCrossentropy', metrics: ['accuracy'], });
+        //this.model.compile({optimizer: optimizer, loss: 'categoricalCrossentropy', metrics: ['accuracy'], });
+        
+        
     } 
 
     componentDidMount() {
@@ -111,6 +113,9 @@ class MyAgent extends Component{
       this.setState({ fen: this.game.fen() });
       
       //this.playNextMove()
+      //console.log(this.boardToString(this.fenToArray(this.state.fen)))
+      this.boardToBitmap(this.fenToArray(this.state.fen))
+      //this.createArray(1,1,1)
       this.timer();
     };
 
@@ -191,6 +196,22 @@ class MyAgent extends Component{
     if(color === "b") return "w";
     if(color === "w") return "b";
   }
+/*
+  transformToBitmap(fen){
+    var tmp = fen.split("")
+    var bitmap = this.getEmptyBitmap(8, 12)
+    
+
+    for(let i=0; i<tmp.length;i++){      
+      if(tmp[i] === " ") break; // array is completed
+      if(tmp[i] === "/") continue; // next line, skip /
+      else{
+        var number = Number(tmp[i]);
+        if(!isNaN(number) ){ // Numbers represents empty squares, wich we fill with Null 
+
+
+  }
+  */
 
   //converts an fen string to an array representation of the status
   //'r1k4r/p2nb1p1/2b4p/1p1n1p2/2PP4/3Q1NB1/1P3PPP/R5K1 b - c3 0 19'
@@ -213,7 +234,6 @@ class MyAgent extends Component{
       }
     }
     return board;
-
   }
 
   //convert the board array to a string. only for debug purpose
@@ -230,11 +250,63 @@ class MyAgent extends Component{
     return str;
   }
 
+  boardToBitmap(board, dimension, pieces){
+    var bitmap = this.getEmptyBitmap(8,12) 
+
+    // the board is a 64 length list, wich we need to transform into a 8x8 array
+    for(let i=0;i<board.length;i++){
+        let x = Math.floor(i/8) // round down to get our x coord
+        let y = i%8 // modulo for our y coord        
+
+        if(board[i] !== null)
+        switch(board[i][0]){
+          case "p": bitmap[x][y][0] = 1; break;
+          case "P": bitmap[x][y][6] = 1; break;
+          case "n": bitmap[x][y][1] = 1; break;
+          case "N": bitmap[x][y][7] = 1; break;
+          case "b": bitmap[x][y][2] = 1; break;
+          case "B": bitmap[x][y][8] = 1; break;
+          case "r": bitmap[x][y][3] = 1; break;
+          case "R": bitmap[x][y][9] = 1; break;
+          case "q": bitmap[x][y][4] = 1; break;
+          case "Q": bitmap[x][y][10] = 1; break;
+          case "k": bitmap[x][y][5] = 1; break;
+          case "K": bitmap[x][y][11] = 1; break;
+          default: console.log("Wrong entry at board[i] found in boardToBitmap")
+        }
+    }
+    return bitmap;
+  }
+
+  getXY(i){
+
+
+  }
+
+  //this function creates an multidimensional array dimension x dimension x figures for our bitmap presentation
+  getEmptyBitmap(dimension, figures){
+    var bitmap = new Array(dimension)
+
+    for(let x=0; x<dimension;x++){
+      bitmap[x] = new Array(dimension)
+      for(let y=0; y<dimension; y++){
+        bitmap[x][y] = new Array(figures)
+        for(let z=0; z< figures; z++){
+          bitmap[x][y][z] = 0; // fill all with zero = no piece present
+        }
+      }
+    }
+    return bitmap
+  } 
+
   render() {
     const { fen } = this.state;
     return this.props.children({ position: fen });
-  }
+  }  
+
 }
+
+
     
     /* eslint react/display-name: 0 */
     /* eslint react/prop-types: 0 */
