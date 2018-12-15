@@ -17,38 +17,11 @@ class MyAgent extends Component{
 
     static propTypes = { children: PropTypes.func/*, model: tf.Sequential, prediction: any*/ };
 
-    state = { fen: "start"};
+    state = { fen: "start", bitmap: null};
 
     intitializeModel(){
-        const LEARNING_RATE = 0.15;
-        const optimizer = tf.train.sgd(LEARNING_RATE);
-        let FIELDS = 64; //all fields of the board
-        let PIECES = 6; // pawn	knight	bishop	rook	queen king
-        let COLOR = 2; // black and white
-        
-        //this.model = tf.sequential();
-        //this.model.add(tf.layers.conv2d({inputShape: [64, 6, 2], kernelSize: 5, filters: 8, strides: 1, activation: 'relu'}))
-        //this.model.add(tf.layers.conv2d(64, (3, 3)/*, input_shape=(FIELDS, PIECES, COLOR), data_format="channels_last"*/))
-        //this.model.add(tf.layers.Activation('relu'))
-        //this.model.add(tf.layers.maxPooling2d({poolSize:[2, 2], strides: [2, 2]}))
-        //this.model.add(tf.layers.conv2d({kernelSize: 5, filters: 16, strides: 1, activation: 'relu'}))
-        //this.model.add(tf.layers.conv2d(64, (3, 3)))
-        //this.model.add(tf.layers.Activation('relu'))
-        //this.model.add(tf.layers.conv2d(64, (3, 3)))
-        //this.model.add(tf.layers.Activation('relu'))
-        //this.model.add(tf.layers.conv2d(64, (3, 3)))
-        //this.model.add(tf.layers.Activation('relu'))
-
-        //this.model.add(tf.layers.flatten())
-        //this.model.add(tf.layers.Dropout(0.5))
-        //this.model.add(tf.layers.dense(400))
-        //this.model.add(tf.layers.Activation('relu'))
-        //this.model.add(tf.layers.Dropout(0.5))
-        //this.model.add(tf.layers.dense({units: 1, kernelInitializer: 'VarianceScaling', activation: 'softmax'})); // units: answer, the move we should do ?
-        //this.model.add(tf.layers.dense(1))
-        //this.model.add(tf.layers.Activation('softmax'))
-        //this.model.compile(loss='categorical_crossentropy', optimizer='adamax', metrics=['accuracy'])
-        //this.model.compile({optimizer: optimizer, loss: 'categoricalCrossentropy', metrics: ['accuracy'], });
+       
+        const model = tf.sequential();
         
         
     } 
@@ -67,7 +40,7 @@ class MyAgent extends Component{
 
     //clears the board and initialize with default starting positions. returns this as state
     reset(){
-        this.game = new Chess();
+        this.game = Chess();
         this.setState({ fen: this.game.fen() });
         setTimeout(() => this.makeRandomMove(), 1000);
     }
@@ -110,11 +83,11 @@ class MyAgent extends Component{
   
       let randomIndex = Math.floor(Math.random() * possibleMoves.length);
       this.game.move(possibleMoves[randomIndex]);
-      this.setState({ fen: this.game.fen() });
-      
+      this.setState({ fen: this.game.fen() , bitmap: this.fenToBitmap(this.game.fen()) });
+
       //this.playNextMove()
       //console.log(this.boardToString(this.fenToArray(this.state.fen)))
-      this.boardToBitmap(this.fenToArray(this.state.fen))
+      //this.fenToBitmap(this.state.fen)
       //this.createArray(1,1,1)
       this.timer();
     };
@@ -196,24 +169,13 @@ class MyAgent extends Component{
     if(color === "b") return "w";
     if(color === "w") return "b";
   }
-/*
-  transformToBitmap(fen){
-    var tmp = fen.split("")
-    var bitmap = this.getEmptyBitmap(8, 12)
-    
 
-    for(let i=0; i<tmp.length;i++){      
-      if(tmp[i] === " ") break; // array is completed
-      if(tmp[i] === "/") continue; // next line, skip /
-      else{
-        var number = Number(tmp[i]);
-        if(!isNaN(number) ){ // Numbers represents empty squares, wich we fill with Null 
-
-
+  fenToBitmap(fen){    
+    return this.boardToBitmap(this.fenToArray(fen))
   }
-  */
 
-  //converts an fen string to an array representation of the status
+
+  //converts an fen string to an array representation of the status (mostly a List)
   //'r1k4r/p2nb1p1/2b4p/1p1n1p2/2PP4/3Q1NB1/1P3PPP/R5K1 b - c3 0 19'
   fenToArray(fen){
     var tmp = fen.split("");
@@ -250,10 +212,17 @@ class MyAgent extends Component{
     return str;
   }
 
+  bitmapToString(bitmap){
+    var str = "";
+
+
+
+  }
+
   boardToBitmap(board, dimension, pieces){
     var bitmap = this.getEmptyBitmap(8,12) 
 
-    // the board is a 64 length list, wich we need to transform into a 8x8 array
+    // the board is a 64 length list, wich we need to transform into a 8x8x12 array
     for(let i=0;i<board.length;i++){
         let x = Math.floor(i/8) // round down to get our x coord
         let y = i%8 // modulo for our y coord        
@@ -272,7 +241,7 @@ class MyAgent extends Component{
           case "Q": bitmap[x][y][10] = 1; break;
           case "k": bitmap[x][y][5] = 1; break;
           case "K": bitmap[x][y][11] = 1; break;
-          default: console.log("Wrong entry at board[i] found in boardToBitmap")
+          default: console.log("Wrong entry at board[i] found in")
         }
     }
     return bitmap;
@@ -285,12 +254,12 @@ class MyAgent extends Component{
 
   //this function creates an multidimensional array dimension x dimension x figures for our bitmap presentation
   getEmptyBitmap(dimension, figures){
-    var bitmap = new Array(dimension)
+    var bitmap = Array(dimension)
 
     for(let x=0; x<dimension;x++){
-      bitmap[x] = new Array(dimension)
+      bitmap[x] = Array(dimension)
       for(let y=0; y<dimension; y++){
-        bitmap[x][y] = new Array(figures)
+        bitmap[x][y] = Array(figures)
         for(let z=0; z< figures; z++){
           bitmap[x][y][z] = 0; // fill all with zero = no piece present
         }
