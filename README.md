@@ -5,6 +5,9 @@ As input i used:
 The chessboard UI: https://github.com/willb335/chessboardjsx <br>
 a chess library: https://github.com/jhlywa/chess.js
 
+Project is paused. 
+The goal was to program using Javascript and React, but ultimately ended in more and more researching about 
+Neural Networks an Chess, which was ineed interesting, but just not the intent.
 
 ----------------------------------------------------------------------------------------------------
 
