@@ -7,7 +7,7 @@ a chess library: https://github.com/jhlywa/chess.js
 
 Project is paused. 
 The goal was to program using Javascript and React, but ultimately ended in more and more researching about 
-Neural Networks an Chess, which was ineed interesting, but just not the intent.
+Neural Networks an Chess, which was indeed interesting, but just not the intent.
 
 ----------------------------------------------------------------------------------------------------
 
